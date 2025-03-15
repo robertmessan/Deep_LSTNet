@@ -50,9 +50,9 @@ class Model(nn.Module):
         
         if (self.skip > 0):
             s = c[:,:, int(-self.pt * self.skip):].contiguous();
-            s = s.view(batch_size, self.hidC, self.pt, self.skip);
+            s = s.view(int(batch_size), int(self.hidC), int(self.pt), int(self.skip)); 
             s = s.permute(2,0,3,1).contiguous();
-            s = s.view(self.pt, batch_size * self.skip, self.hidC);
+            s = s.view(int(self.pt), int(batch_size * self.skip), int(self.hidC));
             _, s = self.GRUskip(s);
             s = s.view(batch_size, self.skip * self.hidS);
             s = self.dropout(s);
