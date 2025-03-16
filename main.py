@@ -145,7 +145,7 @@ if args.cuda:
 best_val = 10000000
 optim = Optim(model.parameters(), args.optim, args.lr, args.clip, )
 
-writer = SummaryWriter(log_dir='runs/exp1')
+writer = SummaryWriter(log_dir='runs/solar')
 # At any point you can hit Ctrl + C to break out of training early.
 try:
     print('Start training....')
