@@ -1,0 +1,1 @@
+python main.py --gpu 0 --horizon 24 --data data/AirQuality_clean.txt --save save/air_quality.pt --output_fun Linear
