@@ -96,7 +96,7 @@ parser.add_argument('--save', type=str, default='models/exchange_rate.pt',
 parser.add_argument('--cuda', type=str, default=False)
 parser.add_argument('--optim', type=str, default='adam')
 parser.add_argument('--lr', type=float, default=0.001)
-parser.add_argument('--horizon', type=int, default=12)
+parser.add_argument('--horizon', type=int, default=24)
 parser.add_argument('--skip', type=int, default=27)
 parser.add_argument('--hidSkip', type=int, default=5)
 parser.add_argument('--L1Loss', type=bool, default=False)
@@ -138,9 +138,9 @@ optim = Optim(model.parameters(), args.optim, args.lr, args.clip, )
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10, verbose=True) #LR schedulling
 
-writer = SummaryWriter(log_dir='runs/air_quality/9schedule')
+writer = SummaryWriter(log_dir='runs/schedulling')
 # At any point you can hit Ctrl + C to break out of training early.
-early_stopping = early_stopping.EarlyStopping(patience=10, verbose=True, delta=0.0001, path='save/best_model8.pt')
+#early_stopping = early_stopping.EarlyStopping(patience=10, verbose=True, delta=0.0001, path='save/best_model8.pt')
 try:
     print('Start training....')
     for epoch in range(1, args.epochs + 1):
@@ -162,8 +162,6 @@ try:
             with open(args.save, 'wb') as f:
                 torch.save(model, f)
             best_val = val_loss
-        else:
-            scheduler.step(val_loss) #Boucle du scheduler ajoutée
         if epoch % 5 == 0:
             test_acc, test_rae, test_corr = evaluate(Data, Data.test[0], Data.test[1], model, evaluateL2, evaluateL1,
                                                      args.batch_size)
@@ -172,11 +170,11 @@ try:
             writer.add_scalar('Loss/Test_RSE', test_acc, epoch)
             writer.add_scalar('Loss/Test_RAE', test_rae, epoch)
             writer.add_scalar('Loss/Test_Corr', test_corr, epoch)
-        early_stopping(best_val, model)
-        if early_stopping.early_stop:
-            print("Early stopping déclenché.")
-            break
-
+        #early_stopping(best_val, model)
+        #if early_stopping.early_stop:
+        #    print("Early stopping déclenché.")
+        #    break
+        scheduler.step(val_loss) #Boucle du scheduler ajoutée
 except KeyboardInterrupt:
     print('-' * 89)
     print('Exiting from training early')
