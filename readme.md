@@ -37,7 +37,7 @@ Certains packages comme ```tensorboard``` et ```torch``` doivent être installé
 
 1. **Clonez ou téléchargez** ce dépôt :
    ```bash
-   git clone [https://github.com/votre_compte/votre_projet.git](https://github.com/robertmessan/Deep_LSTNet.git)
+   git clone https://github.com/robertmessan/Deep_LSTNet.git
    ```
 2. Activez votre GPU (si disponible et nécessaire) en configurant votre environnement (ex. : CUDA ou cuDNN).
 
