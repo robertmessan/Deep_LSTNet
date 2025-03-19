@@ -96,7 +96,7 @@ parser.add_argument('--save', type=str, default='models/exchange_rate.pt',
 parser.add_argument('--cuda', type=str, default=False)
 parser.add_argument('--optim', type=str, default='adam')
 parser.add_argument('--lr', type=float, default=0.001)
-parser.add_argument('--horizon', type=int, default=24)
+parser.add_argument('--horizon', type=int, default=12)
 parser.add_argument('--skip', type=int, default=27)
 parser.add_argument('--hidSkip', type=int, default=5)
 parser.add_argument('--L1Loss', type=bool, default=False)
