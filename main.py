@@ -104,30 +104,20 @@ parser.add_argument('--normalize', type=int, default=2)
 parser.add_argument('--output_fun', type=str, default='None')
 args = parser.parse_args()
 
-args.cuda = args.gpu is not None
-if args.cuda:
-    torch.cuda.set_device(args.gpu)
+args.cuda = args.gpu is not None and torch.cuda.is_available()
 
-#if args.gpu is not None:
-#    if args.gpu > torch.cuda.device_count():
-#        raise ValueError(f"GPU {args.gpu} demandé, mais seulement {torch.cuda.device_count()} GPU(s) disponibles.")
-#    torch.cuda.set_device(args.gpu)
+device = torch.device("cuda" if args.cuda else "cpu")
 
 """ Set the random seed manually for reproducibility. """
 torch.manual_seed(args.seed)
-if torch.cuda.is_available():
-    if not args.cuda:
-        print("WARNING: You have a CUDA device, so you should probably run with --cuda")
-    else:
-        torch.cuda.manual_seed(args.seed)
+if args.cuda:
+    torch.cuda.manual_seed(args.seed)
 
 Data = Data_utility(args.data, 0.6, 0.2, args.cuda, args.horizon, args.window, args.normalize)
 print(Data.rse)
 
 model = eval(args.model).Model(args, Data)
-
-if args.cuda:
-    model.cuda()
+model.to(device)
 
 nParams = sum([p.nelement() for p in model.parameters()])
 print('* number of parameters: %d' % nParams)
@@ -138,10 +128,10 @@ else:
     criterion = nn.MSELoss(reduction='sum')
 evaluateL2 = nn.MSELoss(reduction='sum')
 evaluateL1 = nn.L1Loss(reduction='sum')
-if args.cuda:
-    criterion = criterion.cuda()
-    evaluateL1 = evaluateL1.cuda()
-    evaluateL2 = evaluateL2.cuda()
+
+criterion = criterion.to(device)
+evaluateL1 = evaluateL1.to(device)
+evaluateL2 = evaluateL2.to(device)
 
 best_val = 10000000
 optim = Optim(model.parameters(), args.optim, args.lr, args.clip, )
