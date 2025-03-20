@@ -64,7 +64,7 @@ def train(data, X, Y, model, criterion, optim, batch_size):
 
 
 parser = argparse.ArgumentParser(description='PyTorch Time series forecasting')
-parser.add_argument('--data', type=str, default='data/exchange_rate.txt',
+parser.add_argument('--data', type=str, default='data/AirQuality_clean.txt',
                     help='location of the data file')  # required=True,
 parser.add_argument('--model', type=str, default='LSTNet',
                     help='')
@@ -135,12 +135,12 @@ evaluateL2 = evaluateL2.to(device)
 
 best_val = 10000000
 optim = Optim(model.parameters(), args.optim, args.lr, args.clip, )
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10, verbose=True) #LR schedulling
+#optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+#scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10, verbose=True) #LR schedulling
 
-writer = SummaryWriter(log_dir='runs/schedulling')
+writer = SummaryWriter(log_dir='runs/air_quality/early_stopping')
 # At any point you can hit Ctrl + C to break out of training early.
-#early_stopping = early_stopping.EarlyStopping(patience=10, verbose=True, delta=0.0001, path='save/best_model8.pt')
+early_stopping = early_stopping.EarlyStopping(patience=10, verbose=True, delta=0.0001, path='save/best_model8.pt')
 try:
     print('Start training....')
     for epoch in range(1, args.epochs + 1):
@@ -170,11 +170,11 @@ try:
             writer.add_scalar('Loss/Test_RSE', test_acc, epoch)
             writer.add_scalar('Loss/Test_RAE', test_rae, epoch)
             writer.add_scalar('Loss/Test_Corr', test_corr, epoch)
-        #early_stopping(best_val, model)
-        #if early_stopping.early_stop:
-        #    print("Early stopping déclenché.")
-        #    break
-        scheduler.step(val_loss) #Boucle du scheduler ajoutée
+        early_stopping(best_val, model)
+        if early_stopping.early_stop:
+            print("Early stopping déclenché.")
+            break
+        #scheduler.step(val_loss) #Boucle du scheduler ajoutée
 except KeyboardInterrupt:
     print('-' * 89)
     print('Exiting from training early')
