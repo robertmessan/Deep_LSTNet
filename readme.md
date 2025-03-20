@@ -3,7 +3,7 @@
 ## Description:
 Ce projet s'inscrit dans le cadre du cours ```introduction au deep learning``` de Télécom SudParis. Nous avons implémenté l'architecture de réseau de neurones proposée dans l'article https://arxiv.org/pdf/1703.07015, puis nous l'avons enrichie avec les techniques de recherche d'hyperparamètres comme le early stopping et le Learning rate schedulling.
 ## Prérequis:
-Il faut disposer d'un GPU cuDA ou ses équivalent pour exécuter cette architecture, elle est spécialement codée en utilisant cuDA.
+
 Certains packages comme ```tensorboard``` et ```torch``` doivent être installés sur votre machine
 ## Structure du projet:
 
