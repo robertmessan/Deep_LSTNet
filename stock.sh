@@ -1,1 +1,1 @@
-python main.py --gpu 1 --data data/exchange_rate.txt --save save/exchange_rate.pt --hidCNN 50 --hidRNN 50 --L1Loss False --output_fun None
+python main.py --gpu 1 --data data/exchange_rate.txt --save save/exchange_rate.pt --hidCNN 50 --hidRNN 50 --epochs 100 --lr 0.001 --dropout 0.2 --horizon 24 --L1Loss False --output_fun None
